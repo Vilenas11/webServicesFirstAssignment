@@ -101,36 +101,10 @@ def index():
 
 @app.route("/all", methods=['GET'])
 def showAll():
-    # jasonObject = []
-    # for autoPartsShops in autoPartsStoreList:
-    #     temporary = {}
-    #     temporary['shopId'] = autoPartsShops.shopId
-    #     temporary['owner'] = autoPartsShops.owner
-    #     temporary['listOfShops'] = [part.to_dict() for part in autoPartsShops.listOfShops]
-    #     jasonObject.append(temporary)
 
-    # stores = autoPartsStore.query.all()
-
-# 
     stores = autoPartsStore.query.all()
     return jsonify([store.to_dict() for store in stores])
 
-# 
-    # return jsonify(jasonObject)
-
-# @app.route("/show/store/<int:store_ID>", methods=['GET'])
-# def show1(store_ID):
-#     jasonObject = []
-
-#     for autoPartsShop in autoPartsStoreList:
-#         if autoPartsShop.shopId == store_ID:
-#             temporary = {}
-#             temporary['shopId'] = autoPartsShop.shopId
-#             temporary['owner'] = autoPartsShop.owner
-#             temporary['listOfShops'] = [part.to_dict() for part in autoPartsShop.listOfShops]
-#             jasonObject.append(temporary)
-#             break
-#     return jsonify(jasonObject)
 
 @app.route("/show/store/<int:store_ID>", methods=['GET'])
 def show1(store_ID):
@@ -140,18 +114,6 @@ def show1(store_ID):
     else:
         return jsonify({'message': 'Store not found'}), 404
 
-# @app.route("/show/part/<int:part_id>", methods=['GET'])
-# def show2(part_id):
-#     jasonObject = []
-
-#     for autoPartsStore in autoPartsStoreList:
-#         for part in autoPartsStore.listOfShops:
-#             if part.partId == part_id:
-#                 temporary = part.to_dict()
-#                 jasonObject.append(temporary)
-#                 break
-
-#     return jsonify(jasonObject)
 @app.route("/show/part/<int:part_id>", methods=['GET'])
 def show2(part_id):
     parts = []
@@ -167,54 +129,6 @@ def show2(part_id):
         return jsonify(parts)
     else:
         return jsonify({'message': 'Part not found'}), 404
-# @app.route('/carparts', methods=['GET'])
-# def get_all():
-#     carparts = carPartsStore.query.all()
-    
-
-# @app.route('/add/store', methods=['GET', 'POST'])
-# def add():
-#     return "1"
-# @app.route('/add/part', methods=['GET', 'POST'])
-# def add2():
-
-#     return "1"
-
-
-
-# @app.route('/update/store/<int:id>', methods=['GET', 'POST'])
-# def update():
-#     return "1"
-
-
-
-
-# @app.route('/update/<store_id>', methods=['PUT'])
-# def update2():
-
-#     return "1"
-# def update2(store_id, part_id):
-#     data = request.json
-#     updated_part = None
-
-#     # Find the store
-#     for autoPartsStore in autoPartsStoreList:
-#         if autoPartsStore.shopId == store_id:
-#             # Find and update the part if it exists
-#             for part in autoPartsStore.listOfShops:
-#                 if part.partId == part_id:
-#                     part.name = data.get('partName', part.name)
-#                     part.manufacturer = data.get('manufacturer', part.manufacturer)
-#                     part.carBrand = data.get('carBrand', part.carBrand)
-#                     part.category = data.get('category', part.category)
-#                     updated_part = part
-#                     break
-#             break
-
-#     if updated_part:
-#         return jsonify(updated_part.to_dict()), 200
-#     else:
-#         return jsonify({'error': 'Part not found'}), 404
 
 @app.route('/update/<store_id>', methods=['PUT'])
 def update2(store_id):
@@ -244,12 +158,6 @@ def create_store():
 
     return jsonify({'message': 'Store created successfully', 'id': new_store.shopId}), 201
 
-# @app.route('/delete/store/<int:id>')
-# def delete():
-#     return "1"
-# @app.route('/delete/part/<int:id>')
-# def delete2():
-#     return "1"
 
 @app.route('/delete/store/<int:id>', methods = ['DELETE'])
 def delete(id):
@@ -260,46 +168,36 @@ def delete(id):
         return jsonify({'message': 'Store deleted successfully'})
     else:
         return jsonify({'message': 'Store not found'}), 404
-
-# @app.route('/delete/part/<int:id>', methods =['DELETE'])
-# def delete2(id):
-#     # # part = autoParts.query.get(id)
-#     # part = db.session.query(autoParts).get(id)
-#     # if part:
-#     #     db.session.delete(part)
-#     #     db.session.commit()
-        
-#     for store in autoPartsStoreList:
-#         for part in store.listOfShops:
-#             if part.partId == id:
-#                 # Remove the part from the list of shops
-#                 store.listOfShops.remove(part)
-#             return jsonify({'message': 'Part deleted successfully'})
-        
-#     return jsonify({'message': 'Part not found'}), 404
-
-
-# @app.route('/delete/part/<int:id>', methods=['DELETE'])
-# def delete2(id):
-#     part = db.session.query(autoParts).get(id)
-#     if part:
-#         db.session.delete(part)
-#         db.session.commit()
-#         return jsonify({'message': 'Part deleted successfully'})
-#     else:
-#         return jsonify({'message': 'Part not found'}), 404
     
-# @app.route('/delete/part/<int:id>', methods=['DELETE'])
-# def delete2(id):
-#     part = autoParts.query.get(id)
-#     if part:
-#         db.session.delete(part)
-#         db.session.commit()
-#         return jsonify({'message': 'Part deleted successfully'})
-#     else:
-#         return jsonify({'message': 'Part not found'}), 404
+@app.route('/deleteAll', methods=['DELETE'])
+def deleteAll():
+    try:
+        # Delete all autoPartsStore records
+        db.session.query(autoPartsStore).delete()
+        db.session.commit()
+        return jsonify({'message': 'All stores deleted successfully'})
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({'error': str(e)}), 500
 
 if __name__ == "__main__":
     with app.app_context():
         db.create_all()
+        if not autoPartsStore.query.first():
+            parts1 = [
+                autoParts(partId=2345, name='stabilizatorius', manufacturer='febi', carBrand='Ford', category='vaziuokle'),
+                autoParts(partId=2346, name='vairo kolonele', manufacturer='stihl', carBrand='Volvo', category='vairo mechanizmas'),
+                autoParts(partId=4555, name='tepalai', manufacturer='Liqui Molly', carBrand='Volvo', category='Aptarnavimas')
+            ]
+            store1 = autoPartsStore(shopId=1, owner='Rahul', listOfShops=parts1)
+            db.session.add(store1)
+            
+            parts2 = [
+                autoParts(partId=133, name='kaladeles', manufacturer='brembo', carBrand='bmw', category='stabdziai'),
+                autoParts(partId=999, name='stabdziu diskai', manufacturer='zimmerman', carBrand='audi', category='stabdziai')
+            ]
+            store2 = autoPartsStore(shopId=2, owner='Patel', listOfShops=parts2)
+            db.session.add(store2)
+
+            db.session.commit()
     app.run(debug=True, port = 5000)
