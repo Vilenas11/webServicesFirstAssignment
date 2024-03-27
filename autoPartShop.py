@@ -49,52 +49,6 @@ class autoParts():
         'category': self.category
         }
     
-    
-# parts1 = [
-#     autoParts(partId=2345, name='stabilizatorius', manufacturer='febi', carBrand='Ford', category='vaziuokle'),
-#     autoParts(partId=2346, name='vairo kolonele', manufacturer='stihl', carBrand='Volvo', category='vairo mechanizmas'),
-#     autoParts(partId=4555, name='tepalai', manufacturer='Liqui Molly', carBrand='Volvo', category='Aptarnavimas')
-# ]
-# store1 = autoPartsStore(shopId=0, owner='Rahul', listOfShops=parts1)
-
-# parts2 = [
-#     autoParts(partId=133, name='kaladeles', manufacturer='brembo', carBrand='bmw', category='stabdziai'),
-#     autoParts(partId=999, name='stabdziu diskai', manufacturer='zimmerman', carBrand='audi', category='stabdziai')
-# ]
-# store2 = autoPartsStore(shopId=1, owner='Patel', listOfShops=parts2)
-
-# db.session.add_all([store1, store2])
-# db.session.commit()
-
-# listOfParts1 = []
-# listOfParts1.append(autoParts(2345, 'stabilizatorius', 'febi','Ford','vaziuokle'))
-# listOfParts1.append(autoParts(2346, 'vairo kolonele', 'stihl','Volvo','vairo mechanizmas'))
-# listOfParts1.append(autoParts(4555, 'tepalai', 'Liqui Molly','Volvo','Aptarnavimas'))
-
-# listOfParts2 = []
-# listOfParts2.append(autoParts(133, 'kaladeles', 'brembo','bmw','stabdziai'))
-# listOfParts2.append(autoParts(999, 'stabdziu diskai', 'zimmerman','audi','stabdziai'))
-
-# autoPartsStoreList = []
-# autoPartsStoreList.append(autoPartsStore(1,"Rahul",listOfParts1))
-# autoPartsStoreList.append(autoPartsStore(2,"Patel",listOfParts2))
-
-# db.session.add(autoPartsStoreList)
-# db.session.add(autoPartsStore(1,"Rahul",listOfParts1))
-# db.session.add(autoPartsStore(2,"Patel", listOfParts2))
-
-
-    
-# class autoParts(db.Model):
-#     _id = db.Column("id", db.Integer, primary_key = True)
-#     def __init__(self, partId, manufacturer, make, category):
-#         self.partId = partId
-#         self.manufacturer = manufacturer
-#         self.make = make
-#         self.category = category
-
-
-
 @app.route("/")
 def index():
     return "welcome to the homePage"
@@ -191,7 +145,7 @@ if __name__ == "__main__":
             ]
             store1 = autoPartsStore(shopId=1, owner='Rahul', listOfShops=parts1)
             db.session.add(store1)
-            
+
             parts2 = [
                 autoParts(partId=133, name='kaladeles', manufacturer='brembo', carBrand='bmw', category='stabdziai'),
                 autoParts(partId=999, name='stabdziu diskai', manufacturer='zimmerman', carBrand='audi', category='stabdziai')
@@ -200,4 +154,4 @@ if __name__ == "__main__":
             db.session.add(store2)
 
             db.session.commit()
-    app.run(debug=True, port = 5000)
+    app.run(host='0.0.0.0', debug=True, port = 5000)
